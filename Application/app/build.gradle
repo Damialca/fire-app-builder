@@ -41,11 +41,11 @@ android {
     buildToolsVersion "25.0.0"
 
     defaultConfig {
-        applicationId "com.amazon.android.calypso"
+        applicationId "com.amazon.android.lvreviewjournal"
         minSdkVersion 21
         targetSdkVersion 23
-        versionCode 9
-        versionName "1.0.5"
+        versionCode 1
+        versionName "1.0.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         multiDexEnabled true
     }
