@@ -4,14 +4,13 @@
   "model": "com.amazon.android.model.content.Content",
   "modelType": "array",
   "translator": "ContentTranslator",
-  "query": "$",
+  "query": "$.playlist",
   "matchList": [
     "title@title",
-    "id@id",
+    "mediaid@id",
     "description@description",
-    "videoURL@url",
-    "imgURL@cardImageUrl",
-    "imgURL@backgroundImageUrl",
-    "channel_id@channelId"
+    "image@url",
+    "image@cardImageUrl",
+    "image@backgroundImageUrl"
   ]
 }

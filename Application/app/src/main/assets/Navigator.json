@@ -14,20 +14,91 @@
   "globalRecipes": [
     {
       "categories": {
-        "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
-        "dynamicParser": "recipes/LightCastCategoriesRecipe.json"
+        "name": "Latest"
       },
       "contents": {
-        "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
-        "dynamicParser": "recipes/LightCastContentsRecipe.json"
+        "dataLoader": "recipes/LightCastDataLoaderRecipe0.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
       }
     },
     {
       "categories": {
-        "name": "Hardcoded Category Name"
+        "name": "Most Popular"
       },
       "contents": {
         "dataLoader": "recipes/LightCastDataLoaderRecipe1.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Raiders"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe2.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Golden Knights"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe3.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Covering The Cage"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe4.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Nevada Preps"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe5.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "News"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe6.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Politics"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe7.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Business"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe8.json",
+        "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
+      }
+    },
+    {
+      "categories": {
+        "name": "Entertainment"
+      },
+      "contents": {
+        "dataLoader": "recipes/LightCastDataLoaderRecipe9.json",
         "dynamicParser": "recipes/LightCastAllContentsRecipe.json"
       }
     }

@@ -1,5 +1,14 @@
 {
   "urls": [
-    "http://www.lightcast.com/api/firetv/channels.php?app_id=249&app_key=gtn89uj3dsw&action=channels_videos"
+    "https://cdn.jwplayer.com/v2/playlists/LHOWwH3Q",
+    "https://cdn.jwplayer.com/v2/playlists/SbSUyYHx",
+    "https://cdn.jwplayer.com/v2/playlists/mmCu6Juj",
+    "https://cdn.jwplayer.com/v2/playlists/73zKqc6X",
+    "https://cdn.jwplayer.com/v2/playlists/FcUtxovT",
+    "https://cdn.jwplayer.com/v2/playlists/tDc1kwWK",
+    "https://cdn.jwplayer.com/v2/playlists/tDc1kwWK",
+    "https://cdn.jwplayer.com/v2/playlists/Tw3HaBqn",
+    "https://cdn.jwplayer.com/v2/playlists/2T1wezrP",
+    "https://cdn.jwplayer.com/v2/playlists/brlVAba3"
   ]
 }
