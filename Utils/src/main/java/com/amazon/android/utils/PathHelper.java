@@ -17,6 +17,7 @@ package com.amazon.android.utils;
 import android.util.Log;
 
 import java.security.InvalidParameterException;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -55,6 +56,12 @@ public class PathHelper {
      * Path separator.
      */
     public static final String PATH_SEPARATOR = "/";
+
+    /**
+     * RBM 11.15.2017 - Indicates path contains an array
+     * Array separator.
+     */
+    public static final String ARRAY_SEPARATOR = "]";
 
     /**
      * This method injects strings into another string. The entry points
@@ -142,6 +149,12 @@ public class PathHelper {
 
         // Find the last separator.
         int lastPathSeparatorPos = path.lastIndexOf(PATH_SEPARATOR);
+
+        //  RBM - Works for source]file only
+        if (hasAnArray(path)) {
+            lastPathSeparatorPos = path.lastIndexOf(ARRAY_SEPARATOR);
+        }
+
         // Zero if not found as string start at zero.
         if (lastPathSeparatorPos < 0) {
             lastPathSeparatorPos = 0;
@@ -150,6 +163,7 @@ public class PathHelper {
             // Skip separator itself.
             lastPathSeparatorPos++;
         }
+
         // Return only the key.
         return path.substring(lastPathSeparatorPos);
     }
@@ -169,6 +183,25 @@ public class PathHelper {
         }
 
         return (path.indexOf(PATH_SEPARATOR) >= 0);
+    }
+
+    /**
+     * Check if given string is a path with array.
+     *
+     * @param path A string that represents the path to follow in the map. if keys
+     *             in the map are separated by a '[]' character, means the previous
+     *             key should contain an array. Example: 'root/level1]level2'
+     *             level1 is an array that needs to be parsed until the level2 key
+     *             is found
+     * @return True if given string has an array.
+     */
+    public static boolean hasAnArray(String path) {
+
+        if (path == null) {
+            return false;
+        }
+
+        return (path.indexOf(ARRAY_SEPARATOR) >= 0);
     }
 
     /**
@@ -195,6 +228,37 @@ public class PathHelper {
                 // Try to get the next map using the current key
                 //noinspection unchecked
                 next = (Map<String, Object>) map.get(key);
+
+                if (hasAnArray(path)) {
+                    String[] arrayKeys = key.split(ARRAY_SEPARATOR);
+
+                    //  Means we are missing either the array key or
+                    //  the map key.
+                    if (arrayKeys.length <= 1) {
+                        next = null;
+                    }
+
+                    //  Get the array to traverse
+                    //  Example source]file, should get the source array
+                    List<Map<String, Object>> sourceList = (List<Map<String, Object>>) map.get(arrayKeys[0]);
+
+                    //  Return an empty maph if the array is empty
+                    if (sourceList.size() <= 0) {
+                        next = null;
+                    }
+
+                    //  Loop through source array, update map until last file found
+                    for (Map<String, Object> source : sourceList ) {
+                        if (source.containsKey(arrayKeys[1])) {
+                            Object strKey = source.get(arrayKeys[1]);
+                            if (strKey != null && strKey instanceof String) {
+                                if (((String) strKey).indexOf(".mp4") >=0){
+                                    next = source;
+                                }
+                            }
+                        }
+                    }
+                }
             }
             // If using the current key did not retrieve a map object, we are done traversing the
             // map.

@@ -21,6 +21,7 @@ import junit.framework.TestCase;
 import org.junit.Test;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * PathHelperTest class is a test for PathHelper class.
@@ -59,6 +60,21 @@ public class PathHelperTest extends TestCase {
     }
 
     /**
+     * Test set has an array method.
+     */
+    @Test
+    public void testHasArray() throws Exception {
+        String noArray = "testNoArray";
+        String withArray = "hasArray]key";
+
+        // Negative test case.
+        assertFalse(PathHelper.hasAnArray(noArray));
+
+        // Positive test case.
+        assertTrue(PathHelper.hasAnArray(withArray));
+    }
+
+    /**
      * Test get map by path method.
      */
     @Test
@@ -67,6 +83,7 @@ public class PathHelperTest extends TestCase {
         // Create a mock hash map and populate items.
         HashMap<String, Object> root = new HashMap<>();
         HashMap<String, String> path1 = new HashMap<>();
+
         root.put("path1", path1);
         path1.put("key", "test");
         root.put("path1", path1);

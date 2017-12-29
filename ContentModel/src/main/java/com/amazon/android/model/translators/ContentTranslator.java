@@ -149,7 +149,9 @@ public class ContentTranslator extends AModelTranslator<Content> {
      */
     @Override
     public boolean validateModel(Content model) {
-
+        //  RBM 12.28.2017 - Las Vegas Review Feed causes a validation error here
+        //  Feed URL https://cdn.jwplayer.com/v2/playlists/lytUnzlU
+        //  Reason:  Description of some videos is empty.
         try {
             return !model.getTitle().isEmpty() &&
                     !model.getDescription().isEmpty() &&

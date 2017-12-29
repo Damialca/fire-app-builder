@@ -9,7 +9,7 @@
     "title@title",
     "mediaid@id",
     "description@description",
-    "image@url",
+    "sources]file@url",
     "image@cardImageUrl",
     "image@backgroundImageUrl"
   ]
