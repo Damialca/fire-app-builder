@@ -33,7 +33,7 @@ import java.util.Map;
  * Content class is a common model for all different type of Contents like video, audio, photo, doc
  * and etc.
  */
-public class Content implements Serializable {
+public class Content implements Serializable, Comparable<Content> {
 
     /**
      * Serial version UID.
@@ -1022,6 +1022,29 @@ public class Content implements Serializable {
                 != null)
             return false;
         return !(mExtras != null ? !mExtras.equals(content.mExtras) : content.mExtras != null);
+
+    }
+
+    /**
+     * Compare two {@link Content} objects by Published Date.
+     *
+     * @param o The reference object with which to compare.
+     * @return The difference in seconds between the o argument published date and this object.
+     */
+    @Override
+    public int compareTo(Content o) {
+
+        //  RBM 01.03.2018 - Get the Published Date value from the
+        //  Extras map.
+        long date1 = new Long(o.getAvailableDate()).longValue();
+        long date2 = new Long(this.getAvailableDate()).longValue();
+        if (date1 > date2) {
+            return 1;
+        } else if (date1 == date2) {
+            return 0;
+        } else {
+            return -1;
+        }
 
     }
 

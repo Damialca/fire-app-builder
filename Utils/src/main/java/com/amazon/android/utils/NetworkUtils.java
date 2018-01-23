@@ -30,7 +30,11 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLConnection;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.List;
+
+import static com.amazon.android.utils.JsonHelper.*;
 
 /**
  * Utility to fetch data from network
@@ -49,6 +53,17 @@ public class NetworkUtils {
      * Constant used for GET requests.
      */
     public static final String GET = "GET";
+
+    /**
+     * Constant used for handling the data
+     * when manipulating multiple urls.
+     */
+    public static final String PLAYLIST = "playlist";
+
+    /**
+     * Constant used for empty string
+     */
+    private static final String EMPTY_STRING = "";
 
     /**
      * Fetch the contents located at the given URL.
@@ -72,6 +87,85 @@ public class NetworkUtils {
                 sb.append(line);
             }
             return sb.toString();
+        }
+        finally {
+            if (inputStream != null) {
+                try {
+                    inputStream.close();
+                    inputStream = null;
+                }
+                catch (IOException e) {
+                    Log.e(TAG, "Closing input stream failed", e);
+                }
+            }
+        }
+    }
+
+    /**
+     * Fetch the contents located at the given URLs.
+     *
+     * @param urlStringList URL to fetch.
+     * @return Data located at the URL.
+     */
+    public static String getDataLocatedAtUrls(List<String> urlStringList) throws IOException {
+
+        InputStream inputStream = null;
+        String finalResult = EMPTY_STRING;
+
+        try {
+            StringBuilder sbResult = new StringBuilder();
+            HashMap<String, HashSet> resultJsonMap = new HashMap<>();
+            int count = 0;
+            Object arrayObject = new Object();
+
+            for (String urlString : urlStringList) {
+                URL url = new URL(urlString);
+                URLConnection urlConnection = url.openConnection();
+                inputStream = new BufferedInputStream(urlConnection.getInputStream());
+                BufferedReader reader = new BufferedReader(new InputStreamReader(
+                        urlConnection.getInputStream(), Helpers.getDefaultAppCharset()), 8);
+                StringBuilder sb = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    sb.append(line);
+                    sbResult.append(line);
+                }
+                try {
+                    Map currentContent = JsonHelper.stringToMap(JsonHelper.escapeComments
+                            (sb.toString()));
+
+                    if (count == 0) {
+                        arrayObject = currentContent.get(PLAYLIST);
+                    }
+                    else {
+                        Object parsingObject = currentContent.get(PLAYLIST);
+                        if (parsingObject instanceof List) {
+                            if (arrayObject instanceof List) {
+                                List jsonMapObject = (List) arrayObject;
+                                for (Object playlist : (List) parsingObject) {
+                                    jsonMapObject.add(playlist);
+                                }
+                                arrayObject = jsonMapObject;
+                            }
+                            else {
+                                Log.e(TAG, "Array object not in a valid format");
+                            }
+                        }
+                        else {
+                            Log.e(TAG, "Parsing object not in a valid format");
+                        }
+
+                    }
+                    resultJsonMap.put(PLAYLIST, new HashSet<>((List) arrayObject));
+
+                } catch (Exception e) {
+                    Log.e(TAG, "Converting to JSON Failed", e);
+                }
+                count = count + 1;
+            }
+            Map<String, Object> finalJsonResult = new HashMap<String, Object>(resultJsonMap);
+            return JsonHelper.mapToString(finalJsonResult);
+            //return sbResult.toString();
         }
         finally {
             if (inputStream != null) {

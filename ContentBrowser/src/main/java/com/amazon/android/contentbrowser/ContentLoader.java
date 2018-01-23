@@ -253,6 +253,7 @@ public class ContentLoader {
                 if (content != null) {
                     contentContainer.addContent(content);
                 }
+                contentContainer.sortContent();
                 return Pair.create(contentContainer, contentAsObject);
             });
         });

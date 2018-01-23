@@ -28,6 +28,7 @@ import android.support.test.InstrumentationRegistry;
 import android.util.Log;
 
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +73,26 @@ public class BasicHttpBasedDataDownloaderTest {
 
         Data data = Data.createDataForPayload(NetworkUtils.getDataLocatedAtUrl(url));
         when(MockUrlGenerator.mMockUrlGenerator.getUrl(any(Map.class))).thenReturn(url);
+
+        dataDownloader.loadData(recipe, new String[0], createSuccessfulDataLoadHandler(data));
+
+        // Validating that verifyUtil.verified() was called in requestHandler
+        verify(verifyUtil).verified();
+    }
+
+    /**
+     * Tests the positive case of passing a valid URL array and successfully reading their data.
+     */
+    @Test
+    public void testMultipleValidUrls() throws IOException, AUrlGenerator.UrlGeneratorException {
+
+        List<String> urls = Arrays.asList("http://www.lightcast.com/api/firetv/channels" +
+                        ".php?app_id=257&app_key=0ojbgtfcsq12&action=channels_videos",
+                "http://www.lightcast.com/api/firetv/channels" +
+                        ".php?app_id=257&app_key=0ojbgtfcsq12&action=channels_videos");
+
+        Data data = Data.createDataForPayload(NetworkUtils.getDataLocatedAtUrls(urls));
+        when(MockUrlGenerator.mMockUrlGenerator.getUrlArray(any(Map.class))).thenReturn(urls);
 
         dataDownloader.loadData(recipe, new String[0], createSuccessfulDataLoadHandler(data));
 

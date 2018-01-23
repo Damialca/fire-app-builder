@@ -19,6 +19,8 @@ import com.amazon.dataloader.datadownloader.AUrlGenerator;
 import android.content.Context;
 
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Mock implementation of {@link AUrlGenerator} used for testing.
@@ -70,6 +72,18 @@ public class MockUrlGenerator extends AUrlGenerator {
      */
     @Override
     public String getUrl(Map params) throws UrlGeneratorException {
+
+        return null;
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * @param params Any params that need to be passed to this method can be passed via this map.
+     * @return This implementation returns null.
+     */
+    @Override
+    public List<String> getUrlArray(Map params) throws UrlGeneratorException {
 
         return null;
     }

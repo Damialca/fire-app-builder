@@ -14,13 +14,13 @@
  */
 package com.amazon.dataloader.datadownloader;
 
-import com.amazon.dataloader.R;
-import com.amazon.android.utils.FileHelper;
-import com.amazon.android.utils.JsonHelper;
-import com.amazon.utils.ObjectVerification;
-
 import android.content.Context;
 import android.util.Log;
+
+import com.amazon.android.utils.FileHelper;
+import com.amazon.android.utils.JsonHelper;
+import com.amazon.dataloader.R;
+import com.amazon.utils.ObjectVerification;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ import java.util.Map;
  * #URL_INDEX} that gives the value of the required index
  * as a string.
  */
-public class BasicFileBasedUrlGenerator extends AUrlGenerator {
+public class RBMBasicFileBasedUrlGenerator extends AUrlGenerator {
 
     /**
      * Keys.
@@ -46,7 +46,7 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
     /**
      * Debug tag.
      */
-    private static final String TAG = BasicFileBasedUrlGenerator.class.getName();
+    private static final String TAG = RBMBasicFileBasedUrlGenerator.class.getName();
 
     /**
      * {@inheritDoc}
@@ -55,7 +55,7 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
      * @throws ObjectCreatorException Any exception generated while fetching this instance will be
      *                                wrapped in this exception.
      */
-    public BasicFileBasedUrlGenerator(Context context) throws ObjectCreatorException {
+    public RBMBasicFileBasedUrlGenerator(Context context) throws ObjectCreatorException {
 
         super(context);
     }
@@ -70,7 +70,7 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
     }
 
     /**
-     * Provides a concrete implementation of {@link BasicFileBasedUrlGenerator}.
+     * Provides a concrete implementation of {@link RBMBasicFileBasedUrlGenerator}.
      *
      * @param context The context to extract application context from.
      * @return Concrete implementation of the UrlGenerator.
@@ -79,7 +79,7 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
      */
     public static AUrlGenerator createInstance(Context context) throws ObjectCreatorException {
 
-        return new BasicFileBasedUrlGenerator(context);
+        return new RBMBasicFileBasedUrlGenerator(context);
     }
 
     /**
@@ -107,9 +107,11 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
             Map urlMap = JsonHelper.stringToMap(JsonHelper.escapeComments
                     (url_file_content));
             List<String> urlList = (List<String>) urlMap.get(URLS);
+
             // Fetch the index at which the desired URL resides
             int urlIndex = Integer.parseInt((String) params.get(URL_INDEX));
             // Return the URL at the desired index
+
             return urlList.get(urlIndex);
         }
         catch (Exception e) {
@@ -119,14 +121,13 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
                     (URL_INDEX) + " in file " + params.get(URL_FILE), e);
         }
     }
+
     /**
      * {@inheritDoc}
      *
-     * It reads a file that contains the URLs in JSON format and returns the Nth URL from this
-     * file. The method expects a key {@link #URL_FILE} in the params that links to the path of the
-     * URL file located in the assets directory. The configuration file is searched if params
-     * doesn't have this value. It also expects another key {@link #URL_INDEX} in params that should
-     * give the value of the index as String.
+     * Modifies the params to extract array of indexes for each URL and call getUrl with each index.
+     * It expects a key {@link #URL_INDEX} in params that should
+     * give the value of the indexes as String array.
      *
      * @param params Map that has the {@link #URL_INDEX} key with the value as the desired index (in
      *               string format).
@@ -134,8 +135,52 @@ public class BasicFileBasedUrlGenerator extends AUrlGenerator {
      */
     @Override
     public List<String> getUrlArray(Map params) throws UrlGeneratorException {
-        List<String> result = new ArrayList<>();
-        return result;
-    }
 
+        //  RBM 12.29.2017
+        //  --------------
+        //  Obtain urls from array of indexes
+        //  The URL INDEX field of the Data Loader Recipes for each
+        //  category will be an array of strings.
+        //  "url_index": ["0","10"]
+        params = ObjectVerification.notNull(params, "params map cannot be null");
+        try {
+            String url_file_path = getKey(params, URL_FILE);
+            String url_file_content = FileHelper.readFile(mContext,
+                    url_file_path);
+            // Converting the data into a map to fetch the URLS key
+            Map urlMap = JsonHelper.stringToMap(JsonHelper.escapeComments
+                    (url_file_content));
+            List<String> urlList = (List<String>) urlMap.get(URLS);
+            List<String> urlIndexList = (List<String>) params.get(URL_INDEX);
+            List<String> urlListResult = new ArrayList<String>();
+
+            for (String index : urlIndexList) {
+                // Fetch the URL at the desired index
+                int urlIndex = Integer.parseInt((String)index);
+                urlListResult.add(urlList.get(urlIndex));
+            }
+            // Return the URL at the desired index
+            return urlListResult;
+        }
+        catch (Exception e) {
+            Log.e(TAG, "Could not read url at index " + params.get(URL_INDEX) + " in file " +
+                    params.get(URL_FILE), e);
+            throw new UrlGeneratorException("Could not read url at index " + params.get
+                    (URL_INDEX) + " in file " + params.get(URL_FILE), e);
+        }
+
+//        List<String> urlIndexList = (List<String>) params.get(URL_INDEX);
+//        List<String> urlListResult = new ArrayList<String>();
+//
+//        for (String index : urlIndexList) {
+//            // Fetch the URL at the desired index
+//            Log.e(TAG,"RBM - url index Before " + params.get(URL_INDEX) + " - " + getKey(params, URL_INDEX));
+//            params.put(URL_INDEX,index);
+//            Log.e(TAG,"RBM - url index After " + params.get(URL_INDEX) + " - " + getKey(params, URL_INDEX));
+//
+//            urlListResult.add(getUrl(params));
+//        }
+
+//        return urlListResult;
+    }
 }

@@ -11,6 +11,7 @@
     "description@description",
     "sources]file@url",
     "image@cardImageUrl",
-    "image@backgroundImageUrl"
+    "image@backgroundImageUrl",
+    "pubdate@availableDate"
   ]
 }

@@ -21,7 +21,9 @@ import com.amazon.android.utils.PathHelper;
 import android.content.Context;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
+import java.util.List;
 
 /**
  * Generates a URL string using a token that was fetched from another URL. It makes an HTTP call to
@@ -117,6 +119,23 @@ public class BasicTokenBasedUrlGenerator extends AUrlGenerator {
     protected String requestToken(String tokenGenerationUrl) throws IOException {
 
         return NetworkUtils.getDataLocatedAtUrl(tokenGenerationUrl);
+    }
+
+    /**
+     * {@inheritDoc}
+     *
+     * This method creates the required URL by fetching the token from the network using the
+     * {@link #TOKEN_GENERATION_URL} and injecting it to the base URL.
+     * The base URL must include the location to inject the token using the pattern: $$token$$.
+     * An example base URL may look like: {@code https://exampleurl.com/?token=$$token$$&&1=2}.
+     * {@link #BASE_URL} and {@link #TOKEN_GENERATION_URL} are expected to be in the param map
+     * argument. If they are not, {@link #mConfiguration} is checked. If the keys could not be
+     * found, an exception is thrown.
+     */
+    @Override
+    public List<String> getUrlArray(Map params) throws UrlGeneratorException {
+        List<String> result = new ArrayList<>();
+        return result;
     }
 
 }

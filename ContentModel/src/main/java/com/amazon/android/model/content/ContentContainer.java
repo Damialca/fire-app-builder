@@ -18,6 +18,7 @@ import com.amazon.utils.StringManipulation;
 
 import android.util.Log;
 
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
@@ -259,6 +260,16 @@ public class ContentContainer implements Iterable<Content> {
         }
 
         mExtras.put(key, value);
+    }
+
+    /**
+     * RBM - 01.04.2018
+     * Sort content by available date
+     *
+     */
+    public void sortContent() {
+
+        Collections.sort(mContents);
     }
 
     /**
